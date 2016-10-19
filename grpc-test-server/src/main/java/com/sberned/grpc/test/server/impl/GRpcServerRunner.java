@@ -20,8 +20,9 @@ import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 public class GRpcServerRunner implements CommandLineRunner, DisposableBean {
     private static final Logger log = LoggerFactory.getLogger(GRpcServerRunner.class);
@@ -77,24 +78,13 @@ public class GRpcServerRunner implements CommandLineRunner, DisposableBean {
 
         List<ServerInterceptor> interceptors = Stream.concat(gRpcService.applyGlobalInterceptors()
                                                              ? globalInterceptors.stream()
-                                                             : Stream.empty(), privateInterceptors).distinct().collect(
-                Collectors.toList());
+                                                             : Stream.empty(), privateInterceptors).distinct().collect(toList());
         return ServerInterceptors.intercept(serviceDefinition, interceptors);
     }
 
 
     private void startDaemonAwaitThread() {
-        Thread awaitThread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    server.awaitTermination();
-                } catch (InterruptedException e) {
-                    log.error("gRPC server stopped.", e);
-                }
-            }
-
-        };
+        Thread awaitThread = new Thread(new GRpcServersAwaitRunnable(server), "grpc-await-thread-0");
         awaitThread.setDaemon(false);
         awaitThread.start();
     }
@@ -117,7 +107,7 @@ public class GRpcServerRunner implements CommandLineRunner, DisposableBean {
                 return metadata.isAnnotated(annotationType.getName());
             }
             return null != applicationContext.getBeanFactory().findAnnotationOnBean(name, annotationType);
-        }).map(name -> applicationContext.getBeanFactory().getBean(name, beanType)).collect(Collectors.toList());
+        }).map(name -> applicationContext.getBeanFactory().getBean(name, beanType)).collect(toList());
 
     }
 }
