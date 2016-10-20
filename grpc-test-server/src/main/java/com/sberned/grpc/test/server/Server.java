@@ -15,12 +15,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
-public class App {
-    private static final Logger log = LoggerFactory.getLogger(App.class);
+public class Server {
+    private static final Logger log = LoggerFactory.getLogger(Server.class);
 
     public static void main(String[] args) {
-        log.info("App 1.0 started!");
-        SpringApplication.run(App.class, args);
+        log.info("Server 1.0 started!");
+        SpringApplication.run(Server.class, args);
         log.info("Spring started!");
     }
 
