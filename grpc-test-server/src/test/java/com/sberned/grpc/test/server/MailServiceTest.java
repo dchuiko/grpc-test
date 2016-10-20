@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {App.class})
+@SpringBootTest(classes = {Server.class})
 public class MailServiceTest {
     private ManagedChannel channel;
 
