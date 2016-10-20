@@ -16,6 +16,7 @@ import ru.sberned.grpc.test.api.messaging.MailRequest;
 import ru.sberned.grpc.test.api.messaging.MailResponse;
 import ru.sberned.grpc.test.api.messaging.MailServiceGrpc;
 import ru.sberned.grpc.test.api.messaging.MailServiceGrpc.MailServiceFutureStub;
+import ru.sberned.grpc.test.api.messaging.Server;
 
 import java.util.concurrent.ExecutionException;
 
@@ -46,12 +47,18 @@ public class MailServiceTest {
                                               .setFrom("from@from.com")
                                               .setSubject("subj")
                                               .setContent("content")
+                                              .addAttachmentIds(111_111)
+                                              .addAttachmentIds(222_222)
+                                              .setServer(Server.LS)
                                               .build();
         // заставляем Future заблокироваться
         MailResponse response = greeterFutureStub.send(request).get();
 
         assertTrue(response.getResult());
         assertTrue(response.getInfo().contains("aaa@bbb.ru"));
+        assertTrue(response.getInfo().contains(Server.LS.name()));
+        assertTrue(response.getInfo().contains("111111"));
+        assertTrue(response.getInfo().contains("222222"));
     }
 
     @Test

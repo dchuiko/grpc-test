@@ -22,8 +22,8 @@ message MailRequest {
   string from = 2;
   string subject = 3;
   string content = 4;
-//  repeated int64 attachmentIds = 5;
-//  Server server = 6;
+  repeated int64 attachmentIds = 5;
+  Server server = 6;
 }
 
 message MailResponse {
