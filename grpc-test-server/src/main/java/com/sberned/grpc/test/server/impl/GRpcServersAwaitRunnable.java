@@ -8,16 +8,16 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 
-public class GRpcServersAwaitRunnable implements Runnable {
+class GRpcServersAwaitRunnable implements Runnable {
     private final Logger log = LoggerFactory.getLogger(GRpcServersAwaitRunnable.class);
 
     private final List<Server> servers;
 
-    public GRpcServersAwaitRunnable(Server server) {
+    GRpcServersAwaitRunnable(Server server) {
         this(singletonList(server));
     }
 
-    public GRpcServersAwaitRunnable(List<Server> servers) {
+    GRpcServersAwaitRunnable(List<Server> servers) {
         this.servers = servers;
     }
 
@@ -25,7 +25,9 @@ public class GRpcServersAwaitRunnable implements Runnable {
     public void run() {
         servers.forEach(server -> {
             try {
+                log.info("Trying to shutdown gRPC server on port {}", server.getPort());
                 server.awaitTermination();
+                log.info("GRpc Server on port {} successfully shutted down", server.getPort());
             } catch (InterruptedException e) {
                 log.error("GRpc server stopped with error", e);
             }

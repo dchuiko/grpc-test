@@ -3,6 +3,7 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'idea'
+// подключаем плагин
 apply plugin: 'com.google.protobuf'
 
 buildscript {
@@ -33,41 +34,41 @@ dependencies {
 def grpcVersion = '1.0.1' // CURRENT_GRPC_VERSION
 
 dependencies {
-  compile "io.grpc:grpc-netty:${grpcVersion}"
-  compile "io.grpc:grpc-protobuf:${grpcVersion}"
-  compile "io.grpc:grpc-stub:${grpcVersion}"
+    compile "io.grpc:grpc-netty:${grpcVersion}"
+    compile "io.grpc:grpc-protobuf:${grpcVersion}"
+    compile "io.grpc:grpc-stub:${grpcVersion}"
 }
 
+//
 protobuf {
-  protoc {
-    // The version of protoc must match protobuf-java. If you don't depend on
-    // protobuf-java directly, you will be transitively depending on the
-    // protobuf-java version that grpc depends on.
-    artifact = 'com.google.protobuf:protoc:3.0.2'
-  }
-  plugins {
-    grpc {
-      artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+    protoc {
+        // The version of protoc must match protobuf-java. If you don't depend on
+        // protobuf-java directly, you will be transitively depending on the
+        // protobuf-java version that grpc depends on.
+        artifact = 'com.google.protobuf:protoc:3.0.2'
     }
-  }
-  generateProtoTasks {
-    all()*.plugins {
-      grpc {
-        // To generate deprecated interfaces and static bindService method,
-        // turn the enable_deprecated option to true below:
-        option 'enable_deprecated=false'
-      }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+        }
     }
-  }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {
+                // To generate deprecated interfaces and static bindService method,
+                // turn the enable_deprecated option to true below:
+                option 'enable_deprecated=false'
+            }
+        }
+    }
 }
-
 
 // Inform IntelliJ projects about the generated code.
 idea {
-  module {
-    // Not using generatedSourceDirs because of
-    // https://discuss.gradle.org/t/support-for-intellij-2016/15294/8
-    sourceDirs += file("${projectDir}/build/generated/source/proto/main/java");
-    sourceDirs += file("${projectDir}/build/generated/source/proto/main/grpc");
-  }
+    module {
+        // Not using generatedSourceDirs because of
+        // https://discuss.gradle.org/t/support-for-intellij-2016/15294/8
+        sourceDirs += file("${projectDir}/build/generated/source/proto/main/java");
+        sourceDirs += file("${projectDir}/build/generated/source/proto/main/grpc");
+    }
 }
