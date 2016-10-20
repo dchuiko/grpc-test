@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class ChatService extends ChatServiceGrpc.ChatServiceImplBase {
     private static final Logger log = LoggerFactory.getLogger(ChatService.class);
 
-    private static Set<StreamObserver<ChatMessageFromServer>> responseObservers = new CopyOnWriteArraySet<>();
+    private static Set<StreamObserver<ChatMessageFromServer>> connected = new CopyOnWriteArraySet<>();
 
     /**
      * То, что возвращается - это стрим тех данных, которые будут обработаны,
@@ -29,7 +29,7 @@ public class ChatService extends ChatServiceGrpc.ChatServiceImplBase {
     @Override
     public StreamObserver<ChatMessage> chat(StreamObserver<ChatMessageFromServer> responseObserver) {
         // добавляем observer для ответа в общий список
-        responseObservers.add(responseObserver);
+        connected.add(responseObserver);
 
         return new StreamObserver<ChatMessage>() {
             @Override
@@ -41,19 +41,19 @@ public class ChatService extends ChatServiceGrpc.ChatServiceImplBase {
                                                                      .setMessage(value)
                                                                      .setTimestamp(currentTimeStamp())
                                                                      .build();
-                responseObservers.forEach(observer -> observer.onNext(message));
+                connected.forEach(observer -> observer.onNext(message));
             }
 
             @Override
             public void onError(Throwable t) {
                 log.error("Error during streaming", t);
-                responseObservers.remove(responseObserver);
+                connected.remove(responseObserver);
             }
 
             @Override
             public void onCompleted() {
                 log.info("Client streaming completed");
-                responseObservers.remove(responseObserver);
+                connected.remove(responseObserver);
                 responseObserver.onCompleted();
             }
         };
