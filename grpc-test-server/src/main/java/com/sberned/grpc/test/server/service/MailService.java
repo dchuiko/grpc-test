@@ -1,13 +1,14 @@
 package com.sberned.grpc.test.server.service;
 
 import com.sberned.grpc.test.server.impl.GRpcService;
+import com.sberned.grpc.test.server.service.interceptor.LogInterceptor;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import ru.sberned.grpc.test.api.MailRequest;
 import ru.sberned.grpc.test.api.MailResponse;
 import ru.sberned.grpc.test.api.MailServiceGrpc;
 
-@GRpcService
+@GRpcService(interceptors = LogInterceptor.class)
 public class MailService extends MailServiceGrpc.MailServiceImplBase {
     /**
      * Важный момент: на сервере всегда работаем в

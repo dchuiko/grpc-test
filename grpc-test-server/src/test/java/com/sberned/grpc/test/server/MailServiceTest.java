@@ -21,10 +21,9 @@ import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {App.class}, webEnvironment = DEFINED_PORT)
+@SpringBootTest(classes = {App.class})
 public class MailServiceTest {
     private ManagedChannel channel;
 
