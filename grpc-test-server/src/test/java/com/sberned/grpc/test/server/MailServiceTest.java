@@ -27,9 +27,6 @@ import static org.junit.Assert.assertTrue;
 public class MailServiceTest {
     private ManagedChannel channel;
 
-    @Rule
-    public OutputCapture outputCapture = new OutputCapture();
-
     @Before
     public void setup() {
         // создаем клиент: без ssl/tlc
