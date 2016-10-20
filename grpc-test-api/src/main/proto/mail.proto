@@ -4,9 +4,11 @@ syntax = "proto3";
 // чтобы классы не были inner в одном общем
 option java_multiple_files = true;
 
+// можно указать в каком package будет сгенерирован код
 package ru.sberned.grpc.test.api.messaging;
 option java_package = "ru.sberned.grpc.test.api.messaging";
 
+// можно добавлять определения из других proto файлов
 import "google/protobuf/timestamp.proto";
 
 enum Server {
@@ -46,25 +48,12 @@ message ChatMessageFromServer {
 }
 
 service ChatService {
+    // двусторонний streaming
     rpc chat(stream ChatMessage) returns (stream ChatMessageFromServer);
 }
 
 /*
-
 могут быть разные сложные типы
 
-enum Server {
-    PORTAL = 0;
-    LS = 1;
-    COMPASS = 2;
-}
-
-message HelloRequest {
-    string name = 1;
-    int32 age = 2;
-    repeated string hobbies = 3;
-    map<string, string> bagOfStrings = 4;
-    Server server = 5;
-}
-
+map<string, string> bagOfStrings = 4;
 */

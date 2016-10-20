@@ -23,16 +23,21 @@ public class MailService extends MailServiceGrpc.MailServiceImplBase {
                  MailResponse.newBuilder()
                              .setResult(true)
                              .setInfo("Mail request " + request.toString() + " served");
-             responseObserver.onNext(replyBuilder.build());
+
+            // послать значение
+            responseObserver.onNext(replyBuilder.build());
 
         } else {
             responseObserver
+                    // послать исключение
                     .onError(Status.FAILED_PRECONDITION
                             .augmentDescription("We don't use Json anymore!")
                             .asException()
                     );
         }
 
+        // обязательно нужно позвать один раз, когда результат сформирован
+        // иначе вызов будет "висеть" или блокироваться со стороны клиента
         responseObserver.onCompleted();
     }
 }

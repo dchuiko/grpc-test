@@ -20,11 +20,15 @@ public class ChatService extends ChatServiceGrpc.ChatServiceImplBase {
     private static Set<StreamObserver<ChatMessageFromServer>> responseObservers = new CopyOnWriteArraySet<>();
 
     /**
-     * То, что возвращается - это стрим тех данных, которые будут обработаны
-     * То, что приходит в качестве параметра - это результат
+     * То, что возвращается - это стрим тех данных, которые будут обработаны,
+     *  в них будут приходить данные с клиента
+     *
+     * То, что приходит в качестве параметра - это результат, в который мы
+     *  пишем результат
      */
     @Override
     public StreamObserver<ChatMessage> chat(StreamObserver<ChatMessageFromServer> responseObserver) {
+        // добавляем observer для ответа в общий список
         responseObservers.add(responseObserver);
 
         return new StreamObserver<ChatMessage>() {
