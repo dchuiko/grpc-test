@@ -41,7 +41,7 @@ public class GRpcServerRunner implements CommandLineRunner, DisposableBean {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("Starting gRPC Server ...");
+        log.info("Starting gRPC Server version 1.0");
 
         // все начинается с билдера
         final ServerBuilder<?> serverBuilder = ServerBuilder.forPort(gRpcServerProperties.getPort());
