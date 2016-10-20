@@ -25,9 +25,7 @@ class GRpcServersAwaitRunnable implements Runnable {
     public void run() {
         servers.forEach(server -> {
             try {
-                log.info("Trying to shutdown gRPC server on port {}", server.getPort());
                 server.awaitTermination();
-                log.info("GRpc Server on port {} successfully shutted down", server.getPort());
             } catch (InterruptedException e) {
                 log.error("GRpc server stopped with error", e);
             }

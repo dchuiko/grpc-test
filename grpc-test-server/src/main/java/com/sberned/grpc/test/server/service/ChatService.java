@@ -10,14 +10,14 @@ import ru.sberned.grpc.test.api.messaging.ChatMessage;
 import ru.sberned.grpc.test.api.messaging.ChatMessageFromServer;
 import ru.sberned.grpc.test.api.messaging.ChatServiceGrpc;
 
-import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 @GRpcService(interceptors = LogInterceptor.class)
 public class ChatService extends ChatServiceGrpc.ChatServiceImplBase {
     private static final Logger log = LoggerFactory.getLogger(ChatService.class);
 
-    // нужно сделать thread safe!
-    private static LinkedHashSet<StreamObserver<ChatMessageFromServer>> responseObservers = new LinkedHashSet<>();
+    private static Set<StreamObserver<ChatMessageFromServer>> responseObservers = new CopyOnWriteArraySet<>();
 
     /**
      * То, что возвращается - это стрим тех данных, которые будут обработаны
@@ -50,6 +50,7 @@ public class ChatService extends ChatServiceGrpc.ChatServiceImplBase {
             public void onCompleted() {
                 log.info("Client streaming completed");
                 responseObservers.remove(responseObserver);
+                responseObserver.onCompleted();
             }
         };
     }

@@ -18,6 +18,8 @@ public class ClientApp {
         } else {
             SimpleExample.execute(channel);
         }
+
+        channel.shutdown();
     }
 
 }

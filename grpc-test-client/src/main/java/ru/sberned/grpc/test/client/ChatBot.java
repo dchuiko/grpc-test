@@ -5,6 +5,7 @@ import io.grpc.stub.StreamObserver;
 import ru.sberned.grpc.test.api.messaging.ChatMessage;
 import ru.sberned.grpc.test.api.messaging.ChatMessageFromServer;
 import ru.sberned.grpc.test.api.messaging.ChatServiceGrpc;
+import ru.sberned.grpc.test.api.messaging.ChatServiceGrpc.ChatServiceStub;
 
 public class ChatBot {
     private final String user;
@@ -15,13 +16,15 @@ public class ChatBot {
         this.user = user;
         this.numberOfMessages = numberOfMessages;
 
-        ChatServiceGrpc.ChatServiceStub chatService = ChatServiceGrpc.newStub(channel);
+        ChatServiceStub chatService = ChatServiceGrpc.newStub(channel);
         chat = chatService.chat(new StreamObserver<ChatMessageFromServer>() {
             @Override
             public void onNext(ChatMessageFromServer value) {
                 final String from = value.getMessage().getFrom();
+                // показываем сообщение, если не от себя
                 if (!user.equals(from)) {
-                    System.out.println("Client " + user + " got chat message from: " + from + " value: " +
+                    System.out.println(Thread.currentThread().getName() +
+                            " - Client " + user + " got chat message from: " + from + " value: " +
                             value.getMessage().getMessage());
                 }
             }
@@ -29,7 +32,7 @@ public class ChatBot {
             @Override
             public void onError(Throwable t) {
                 t.printStackTrace();
-                System.out.println("Client " + user + " Disconnected");
+                System.out.println("Client " + user + " Disconnected by Error");
             }
 
             @Override
@@ -40,15 +43,26 @@ public class ChatBot {
     }
 
     public void start() {
-        for (int i = 0; i < numberOfMessages; i++) {
-            try {
-                Thread.sleep((int) (7000 * Math.random()));
-                chat.onNext(ChatMessage.newBuilder().setFrom(user).setMessage("msg " + i).build());
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        try {
+            for (int i = 0; i < numberOfMessages; i++) {
+                try {
+                    Thread.sleep((int) (1000 * Math.random()));
+                    chat.onNext(ChatMessage.newBuilder()
+                                           .setFrom(user)
+                                           .setMessage("msg " + (i + 1))
+                                           .build());
+                } catch (Exception e) {
+                    chat.onError(e);
+                    throw new RuntimeException(e);
+                }
             }
+
+            Thread.sleep(3000);
+
+            // перестаем слушать и отсылать
+            chat.onCompleted();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        chat.onCompleted();
     }
 }
