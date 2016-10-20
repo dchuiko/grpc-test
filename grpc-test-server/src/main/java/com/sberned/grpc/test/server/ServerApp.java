@@ -19,7 +19,7 @@ public class ServerApp {
     private static final Logger log = LoggerFactory.getLogger(ServerApp.class);
 
     public static void main(String[] args) {
-        log.info("Server 2.0 started!!");
+        log.info("Server 2.0 started!");
         SpringApplication.run(ServerApp.class, args);
         log.info("Spring started!");
     }
