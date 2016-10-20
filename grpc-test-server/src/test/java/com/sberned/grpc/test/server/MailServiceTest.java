@@ -12,10 +12,10 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.rule.OutputCapture;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.sberned.grpc.test.api.MailRequest;
-import ru.sberned.grpc.test.api.MailResponse;
-import ru.sberned.grpc.test.api.MailServiceGrpc;
-import ru.sberned.grpc.test.api.MailServiceGrpc.MailServiceFutureStub;
+import ru.sberned.grpc.test.api.messaging.MailRequest;
+import ru.sberned.grpc.test.api.messaging.MailResponse;
+import ru.sberned.grpc.test.api.messaging.MailServiceGrpc;
+import ru.sberned.grpc.test.api.messaging.MailServiceGrpc.MailServiceFutureStub;
 
 import java.util.concurrent.ExecutionException;
 
