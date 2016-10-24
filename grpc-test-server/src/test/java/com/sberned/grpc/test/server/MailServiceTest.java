@@ -16,6 +16,7 @@ import ru.sberned.grpc.test.api.messaging.MailServiceGrpc;
 import ru.sberned.grpc.test.api.messaging.MailServiceGrpc.MailServiceFutureStub;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -37,6 +38,8 @@ public class MailServiceTest {
     public void shouldSend() throws ExecutionException, InterruptedException {
         MailServiceFutureStub greeterFutureStub =
                 MailServiceGrpc.newFutureStub(channel);
+        // можно устанавливать timeout-ы на вызовы
+//                               .withDeadlineAfter(1, TimeUnit.MICROSECONDS);
         MailRequest request = MailRequest.newBuilder().setTo("aaa@bbb.ru")
                                               .setFrom("from@from.com")
                                               .setSubject("subj")
